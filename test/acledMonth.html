@@ -26,58 +26,6 @@
         });
         return flag;
     }
-    function loadGeneralData(inputData){
-
-        var attrOmit = ["iso", "event_id_cnty",
-            "event_id_no_cnty", "event_date",
-            "time_precision", "actor1",
-            "assoc_actor_1", "inter1", "actor2",
-            "assoc_actor_2", "inter2", "interaction",
-            "region", "country", "admin1", "admin2",
-            "admin3", "location", "latitude", "longitude",
-            "geo_precision", "source", "source_scale",
-            "timestamp", "iso3"];
-
-        var reducedData = [],
-            obj = {};
-
-        inputData.forEach(d => {
-            attrOmit.forEach(attr => {  // keep only wanted attributes
-                delete d[attr];
-            });
-            d["notes"] = d["notes"].trim();     // remove black space 2 sides
-            obj[d["notes"]] = d;                // remove duplicates
-        });
-        console.log("inputData length: " + inputData.length);
-        for (var key in obj) {                   // write to new array
-            reducedData.push(obj[key]);
-        }
-        console.log("reducedData length: " + reducedData.length);
-
-        reducedData.forEach((d, i) => {
-            var event = d["event_type"];        // change event name
-            if ((event === "Battle-No change of territory") ||
-                (event === "Battle-Non-state actor overtakes territory") ||
-                (event === "Battle-Government regains territory")) {
-                d["event_type"] = "Battles";
-            }
-            else if ((event === "Strategic development") ||
-                (event === "Headquarters or base established") ||
-                (event === "Non-violent transfer of territory") ||
-                (event === "Remote explosive/landmine/IED")) {
-                d["event_type"] = "Others";
-            }
-            d.keywords = [];
-            d["notes"].toLowerCase().split(" ").forEach(w => {
-                w = w.trim().replace(/\.|\,|\(|\)|\;|\:|\[|\]|\&|\-|\!|\?|\#|\"|\'/gi, '').replace(/s$/g, '');
-                if ((stopWordList.find(wm => wm == w) == undefined) && (checkInclude(w)) && isNaN(w)) {
-                    d["keywords"].push(w);
-                }
-            });
-        });
-        reducedData.reverse();
-        return reducedData;
-    }
     function buildWords(yearRecord, date, top) {
         var obj = {};
         topics.forEach((topic,j) => {
@@ -128,7 +76,60 @@
 
         return words;
     }
+    function loadGeneralData(inputData){
 
+        var attrOmit = ["iso", "event_id_cnty",
+            "event_id_no_cnty", "event_date",
+            "time_precision", "actor1",
+            "assoc_actor_1", "inter1", "actor2",
+            "assoc_actor_2", "inter2", "interaction",
+            "region", "country", "admin1", "admin2",
+            "admin3", "location", "latitude", "longitude",
+            "geo_precision", "source", "source_scale",
+            "timestamp", "iso3"];
+
+        var reducedData = [],
+            obj = {};
+
+        inputData.forEach(d => {
+            attrOmit.forEach(attr => {  // keep only wanted attributes
+                delete d[attr];
+            });
+            d["notes"] = d["notes"].trim();     // remove black space 2 sides
+            obj[d["notes"]] = d;                // remove duplicates
+        });
+        console.log("inputData length: " + inputData.length);
+        for (var key in obj) {                   // write to new array
+            reducedData.push(obj[key]);
+        }
+        console.log("reducedData length: " + reducedData.length);
+
+        reducedData.forEach((d, i) => {
+            var event = d["event_type"];        // change event name
+            if ((event === "Battle-No change of territory") ||
+                (event === "Battle-Non-state actor overtakes territory") ||
+                (event === "Battle-Government regains territory")) {
+                d["event_type"] = "Battles";
+            }
+            else if ((event === "Strategic development") ||
+                (event === "Headquarters or base established") ||
+                (event === "Non-violent transfer of territory") ||
+                (event === "Remote explosive/landmine/IED")) {
+                d["event_type"] = "Others";
+            }
+            d.keywords = [];
+            d["notes"].toLowerCase().split(" ").forEach(w => {
+                w = w.trim().replace(/\.|\,|\(|\)|\;|\:|\[|\]|\&|\-|\!|\?|\#|\"|\'/gi, '').replace(/s$/g, '');
+                if ((stopWordList.find(wm => wm == w) == undefined) && (checkInclude(w)) && isNaN(w)) {
+                    d["keywords"].push(w);
+                }
+            });
+        });
+        reducedData.reverse();
+        // console.log("reducedData:");
+        // console.log(reducedData);
+        return reducedData;
+    }
     function loadSuddenData(inputData){
         var groupData = d3.nest()
             .key(d => d["year"])
@@ -187,6 +188,15 @@
         //     })
         // });
         // return suddenData;
+    }
+    function getTop(suddenData, top){
+        suddenData.forEach((data) => {
+            topics.forEach((topic) => {
+                data["words"][topic] = data["words"][topic]
+                .slice(0,top);
+            })
+        });
+        return suddenData;
     }
 
     // -----------------------Asia-----------------------------------------

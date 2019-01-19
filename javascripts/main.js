@@ -1,6 +1,6 @@
 // pre-defined size
-var initWidth = 1300,
-    initHeight = 800,
+var initWidth = 2000,
+    initHeight = 700,
     initMinFont = 15,
     initMaxFont = 50,
     initFlag = "none",
@@ -59,8 +59,8 @@ function loadData(){
     spinner = new Spinner(opts).spin(target);
     // END: loader spinner settings ****************************
 
-    //loadAcledDataAsia();
-    loadAcledDataME();
+    loadAcledDataAsia();
+   //loadAcledDataME();
 
     //loadAcledDataAfrica();
 
@@ -264,16 +264,14 @@ function draw(data){
 
     var opacity = d3.scale.sqrt()
         .domain([minFatal, maxFatal])
-        .range([0.3,1]);
-    console.log(maxFatal);
+        .range([0.4,1]);
+
 
     // Add moi chu la 1 element <g>, xoay g dung d.rotate
     var placed = true; // = false de hien thi nhung tu ko dc dien
 
     //  ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ PLACING WORDS  ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿
 
-    console.log("allWords");
-    console.log(allWords);
 
     mainGroup.selectAll('.g').data(allWords).enter().append('g')
         .attr({transform: function(d){return 'translate('+d.x+', '+d.y+')rotate('+d.rotate+')';}})

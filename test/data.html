@@ -7,9 +7,30 @@
 </head>
 <body>
 <script>
-    d3.json("../data/me.json", function (error, inputData){
-        console.log(inputData);
-    })
+    // d3.json("../data/AfricaFreq.json", function (error, inputData){
+    //     console.log(inputData);
+    // });
+    var totalFrequenciesABox;
+    acledFileName = "Africa";
+    loadFreq(dataHandler);
+
+
+    function loadFreq(callback) {
+        d3.json("../data/" + acledFileName + "Freq.json", function (error, freqData) {
+            if (error) {
+                return callback(error);
+            }
+            else {
+                totalFrequenciesABox = callback(freqData);
+                console.log(totalFrequenciesABox);
+            }
+        });
+    }
+    function dataHandler(data){
+        return data;
+    }
+
+    console.log(totalFrequenciesABox);
 </script>
 </body>
 </html>

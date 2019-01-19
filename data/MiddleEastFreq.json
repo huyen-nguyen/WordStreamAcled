@@ -1,0 +1,31 @@
+[
+    {
+        "Battles": 4669,
+        "Violence against civilians": 976,
+        "Remote violence": 9917,
+        "Riots/Protests": 3587,
+        "Others": 1075
+    },
+    {
+        "Battles": 13249,
+        "Violence against civilians": 2153,
+        "Remote violence": 24512,
+        "Riots/Protests": 2533,
+        "Others": 1445
+    },
+    {
+        "Battles": 8698,
+        "Violence against civilians": 1775,
+        "Remote violence": 18782,
+        "Riots/Protests": 5804,
+        "Others": 2764
+    },
+    {
+        "Battles": 379,
+        "Violence against civilians": 62,
+        "Remote violence": 436,
+        "Riots/Protests": 195,
+        "Others": 115,
+        "Battle-no change of territory": 2
+    }
+]
