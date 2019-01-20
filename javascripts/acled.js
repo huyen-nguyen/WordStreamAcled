@@ -86,3 +86,23 @@ function loadAcledDataAfrica() {
         }
     });
 }
+function loadAcledDataMEMonth() {
+    acledFileName = "MiddleEastMonth";
+    loadFreq(dataHandler);
+    d3.json("data/MiddleEastMonth.json", function (error, inputData) {
+        if (error) {
+            console.log(error);
+        }
+        else {
+
+            var temp = JSON.parse(JSON.stringify(inputData));
+            var topData = getTop(temp, 50);        // same input, output specific
+
+
+            data = tfidf(topData);
+            console.log("Oh");
+            draw(data);
+            // timeArcs()
+        }
+    });
+}

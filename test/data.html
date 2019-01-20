@@ -10,27 +10,16 @@
     // d3.json("../data/AfricaFreq.json", function (error, inputData){
     //     console.log(inputData);
     // });
-    var totalFrequenciesABox;
-    acledFileName = "Africa";
-    loadFreq(dataHandler);
 
-
-    function loadFreq(callback) {
-        d3.json("../data/" + acledFileName + "Freq.json", function (error, freqData) {
+        d3.json("../data/MiddleEastFreq.json", function (error, freqData) {
             if (error) {
-                return callback(error);
+                console.log(error);
             }
             else {
-                totalFrequenciesABox = callback(freqData);
-                console.log(totalFrequenciesABox);
+                console.log(freqData);
             }
         });
-    }
-    function dataHandler(data){
-        return data;
-    }
 
-    console.log(totalFrequenciesABox);
 </script>
 </body>
 </html>

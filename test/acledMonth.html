@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>WordStream</title>
+    <title>Month</title>
     <script src="../lib/d3.min.js"></script>
     <script src="../lib/loaddata.js"></script>
     <script src="../lib/d3.layout.wordstream.js"></script>
@@ -79,13 +79,13 @@
     function loadGeneralData(inputData){
 
         var attrOmit = ["iso", "event_id_cnty",
-            "event_id_no_cnty", "event_date",
+            "event_id_no_cnty",
             "time_precision", "actor1",
             "assoc_actor_1", "inter1", "actor2",
             "assoc_actor_2", "inter2", "interaction",
             "region", "country", "admin1", "admin2",
             "admin3", "location", "latitude", "longitude",
-            "geo_precision", "source", "source_scale",
+            "geo_precision", "source", "source_scale", "year",
             "timestamp", "iso3"];
 
         var reducedData = [],
@@ -106,6 +106,7 @@
 
         reducedData.forEach((d, i) => {
             var event = d["event_type"];        // change event name
+
             if ((event === "Battle-No change of territory") ||
                 (event === "Battle-Non-state actor overtakes territory") ||
                 (event === "Battle-Government regains territory")) {
@@ -124,31 +125,41 @@
                     d["keywords"].push(w);
                 }
             });
+            // group by month
+            var outputFormat = d3.time.format('%b %Y');
+            var date = Date.parse(d["event_date"]);
+            date = outputFormat(new Date(date));
+            d.time = date;
+
         });
+
         reducedData.reverse();
-        // console.log("reducedData:");
-        // console.log(reducedData);
+        console.log("reducedData:");
+        console.log(reducedData);
         return reducedData;
     }
     function loadSuddenData(inputData){
         var groupData = d3.nest()
-            .key(d => d["year"])
+            .key(d => d["time"])
             .key(d => d["event_type"])
             .entries(loadGeneralData(inputData));
-
-        // plug me in for getting data
-        // .map(d => {
+            // (1) - get all data
+        //     .map(d => {
         //     return {
         //         date: d.key,
         //         words: buildWords(d, d.key)     // d.key = date(year)
         //     }
-        // })
+        // });
 
+        console.log("groupData:");
+        console.log(groupData);
+
+        // (2) - count event frequency -------------------------------------
         // sort by topic
         var sortedData = JSON.parse(JSON.stringify(groupData));
         groupData.forEach((yearRecord, i) => {
             topics.forEach((topic, j) => {
-                yearRecord.values.forEach((event, k) => {
+                yearRecord["values"].forEach((event, k) => {
                     if (topic == event["key"]){
                         sortedData[i].values[j] = JSON.parse(JSON.stringify(event));
                     }
@@ -156,7 +167,6 @@
             })
         });
 
-        // count event frequency
         var eventFrequency = [];
         sortedData.forEach((yearRecord, i) => {
             var obj = {};
@@ -168,89 +178,39 @@
 
         console.log("event freq:");
         console.log(JSON.parse(JSON.stringify(eventFrequency)));
-
-            console.log("groupData:");
-            console.log(groupData);
-            // .map(d => {
-            //     return {
-            //         date: d.key,
-            //         words: buildWords(d, d.key)     // d.key = date(year)
-            //     }
-            // })
+        // --------------------------------------------------------
 
 
+        // (1) - get all data
         // var suddenData = processSuddenFreq(groupData);  // sort by sudden
         // suddenData.forEach((data) => {
         //     topics.forEach((topic) => {
         //         data["words"][topic] = data["words"][topic]
         //             .sort((a,b) => b["sudden"] - a["sudden"]);
-        //             //.slice(0,top);
         //     })
         // });
         // return suddenData;
-    }
-    function getTop(suddenData, top){
-        suddenData.forEach((data) => {
-            topics.forEach((topic) => {
-                data["words"][topic] = data["words"][topic]
-                .slice(0,top);
-            })
-        });
-        return suddenData;
+
     }
 
-    // -----------------------Asia-----------------------------------------
 
-    // d3.csv("../data/asia.csv", function (error, inputData) {
-    //     if (error) {
-    //         console.log(error);
-    //     }
-    //     else {
-    //         var allData = loadSuddenData(inputData);    // same input, output general
-    //         var temp = JSON.parse(JSON.stringify(allData));
-    //         var topData = getTop(temp, 40);        // same input, output specific
-    //         console.log("all:");
-    //         console.log(allData);
-    //
-    //         console.log("final data:");
-    //         console.log(topData);
-    //     }
-    // });
-
-    // ---------------------------Middle East-------------------------------------
-
-        // d3.csv("../data/Middle_East.csv", function (error, inputData) {
-        //     if (error) {
-        //         console.log(error);
-        //     }
-        //     else {
-        //         var allData = loadSuddenData(inputData);    // same input, output general
-        //         var temp = JSON.parse(JSON.stringify(allData));
-        //         var topData = getTop(temp, 40);        // same input, output specific
-        //         console.log("all:");
-        //         console.log(allData);
-        //
-        //         console.log("final data:");
-        //         console.log(topData);
-        //     }
-        // });
-
-    // -----------------------------Africa-----------------------------------
-
-    d3.csv("../data/asia.csv", function (error, inputData) {
+    d3.csv("../data/Middle_East.csv", function (error, inputData) {
         if (error) {
             console.log(error);
         }
         else {
-            loadSuddenData(inputData);
-            //var allData = loadSuddenData(inputData);    // same input, output general
-            //var temp = JSON.parse(JSON.stringify(allData));
-            //var topData = getTop(temp, 30);        // same input, output specific
-            // console.log("all:");
-            // console.log(allData);
 
-            //console.log("final data:");
-            //console.log(topData);
+            // (1)
+            // var allData = loadSuddenData(inputData);    // same input, output general
+            // var temp = JSON.parse(JSON.stringify(allData));
+            //
+            // console.log("all:");
+            // console.log(temp);
+
+            // (2)
+            loadSuddenData(inputData);
+
+
         }
     });
                 // var keys = d3.keys(reducedData[0]);

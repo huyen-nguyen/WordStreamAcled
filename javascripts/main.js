@@ -1,8 +1,8 @@
 // pre-defined size
-var initWidth = 2000,
-    initHeight = 700,
-    initMinFont = 15,
-    initMaxFont = 50,
+var initWidth = 4000,
+    initHeight = 900,
+    initMinFont = 20,
+    initMaxFont = 55,
     initFlag = "none",
     topRank;
 
@@ -59,10 +59,10 @@ function loadData(){
     spinner = new Spinner(opts).spin(target);
     // END: loader spinner settings ****************************
 
-    loadAcledDataAsia();
+   loadAcledDataAsia();
    //loadAcledDataME();
-
-    //loadAcledDataAfrica();
+   //loadAcledDataAfrica();
+   // loadAcledDataMEMonth();
 
     // fileName = "data/"+fileName+".tsv"; // Add data folder path
     // if (fileName.indexOf("Cards_Fries")>=0){
