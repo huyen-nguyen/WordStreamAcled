@@ -7,16 +7,14 @@
 </head>
 <body>
 <script>
-    // d3.json("../data/AfricaFreq.json", function (error, inputData){
-    //     console.log(inputData);
-    // });
 
-        d3.json("../data/MiddleEastFreq.json", function (error, freqData) {
+
+        d3.tsv("../data/EmptyWheel.tsv", function (error, data) {
             if (error) {
                 console.log(error);
             }
             else {
-                console.log(freqData);
+                console.log(data);
             }
         });
 

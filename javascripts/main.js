@@ -1,8 +1,8 @@
 // pre-defined size
-var initWidth = 4000,
-    initHeight = 900,
-    initMinFont = 20,
-    initMaxFont = 55,
+var initWidth = 7000,
+    initHeight = 2000,
+    initMinFont = 30,
+    initMaxFont = 80,
     initFlag = "none",
     topRank;
 
@@ -59,10 +59,11 @@ function loadData(){
     spinner = new Spinner(opts).spin(target);
     // END: loader spinner settings ****************************
 
-   loadAcledDataAsia();
+   // loadAcledDataAsia();
    //loadAcledDataME();
    //loadAcledDataAfrica();
    // loadAcledDataMEMonth();
+    loadGTD();
 
     // fileName = "data/"+fileName+".tsv"; // Add data folder path
     // if (fileName.indexOf("Cards_Fries")>=0){
@@ -128,8 +129,8 @@ function draw(data){
     var height = initHeight;
     var font = "Arial";
     var interpolation = "cardinal";
-    var bias = 200;
-    var offsetLegend = 30;
+    var bias = 0;
+    var offsetLegend = 0;
     var axisPadding = 10;
     var margins = {left: 20, top: 20, right: 10, bottom: 30};
     var ws = d3.layout.wordStream()
@@ -148,12 +149,15 @@ function draw(data){
         maxFatal = ws.maxFatal();
 
     //Display data
-    var legendFontSize = 20;
-    var legendHeight = boxes.topics.length*legendFontSize;
+    var legendFontSize = 50;
+    // var legendHeight = boxes.topics.length*legendFontSize;
+    var legendHeight = 40;
+    var forFun = 15;
     //set svg data.
     svg.attr({
         width: width + margins.left + margins.top,
-        height: height + margins.top + margins.bottom + axisPadding + offsetLegend + legendHeight
+        height: height + margins.top + margins.bottom + axisPadding + offsetLegend
+            + legendHeight + forFun
     });
 
     var area = d3.svg.area()
@@ -255,6 +259,8 @@ function draw(data){
         });
     });
 
+    console.log("Data:");
+    console.log(JSON.parse(JSON.stringify(boxes.data)));
     //Color based on term
     // var terms = [];
     // for(i=0; i< allWords.length; i++){
@@ -271,7 +277,6 @@ function draw(data){
     var placed = true; // = false de hien thi nhung tu ko dc dien
 
     //  ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ PLACING WORDS  ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿ ✿
-
 
     mainGroup.selectAll('.g').data(allWords).enter().append('g')
         .attr({transform: function(d){return 'translate('+d.x+', '+d.y+')rotate('+d.rotate+')';}})
@@ -417,11 +422,12 @@ function draw(data){
     });
 
     //Build the legends
-    var legendGroup = svg.append('g').attr('transform', 'translate(' + margins.left + ',' + (height+margins.top+offsetLegend) + ')');
+    var legendGroup = svg.append('g').attr('transform', 'translate(' + margins.left + ',' + (height+margins.top+offsetLegend-500) + ')');
     var legendNodes = legendGroup.selectAll('g').data(boxes.topics).enter().append('g')
-        .attr('transform', function(d, i){return 'translate(' + 30 + ',' + (i*legendFontSize+5) + ')';});
+        .attr('transform', function(d, i){return 'translate(' + 200 + ',' + (i*legendFontSize) + ')';});
+
     legendNodes.append('circle').attr({
-        r: 6,
+        r: 15,
         fill: function(d, i){return color(i);},
         'fill-opacity': 1,
         stroke: 'black',
@@ -430,7 +436,7 @@ function draw(data){
     legendNodes.append('text').text(function(d){return d;}).attr("class","value").attr({
         'font-size': legendFontSize,
         'alignment-baseline': 'middle',
-        dx: 15, dy: 3
+        dx: 35, dy: 2
 
     });
 
@@ -602,8 +608,8 @@ function styleAxis(axisNodes){
     axisNodes.selectAll('.tick text').attr({
         // 'text-anchor': 'end',
         // 'transform': 'rotate(-30)',
-        'font-family': 'serif',
-        'font-size': 14
+        'font-family': 'sans-serif',
+        'font-size': 30
     });
 }
 function styleGridlineNodes(gridlineNodes){

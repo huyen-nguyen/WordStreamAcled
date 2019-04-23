@@ -1,5 +1,16 @@
-var topics = ["Battles", "Violence against civilians", "Remote violence", "Riots/Protests", "Others"];
-var acledFileName, totalFrequenciesABox;
+// var topics = ["Battles", "Violence against civilians", "Remote violence", "Riots/Protests", "Others"];
+
+var topics = ["Assassination",
+    "Hijacking",
+    "Kidnapping",
+    "Barricade Incident",
+    "Bombing/Explosion",
+    "Armed Assault",
+    "Unarmed Assault",
+    "Facility/Infrastructure Attack",
+    "Unknown"];
+
+var dataFileName, totalFrequenciesABox;
 
 function getTop(suddenData, top){
     suddenData.forEach((data) => {
@@ -12,13 +23,15 @@ function getTop(suddenData, top){
 }
 
 function loadFreq(callback) {
-    d3.json("data/" + acledFileName + "Freq.json", function (error, freqData) {
+    d3.json("data/GTD/" + dataFileName + "Freq.json", function (error, freqData) {
+        //d3.json("data/" + dataFileName + "Freq.json", function (error, freqData) {
         if (error) {
             return callback(error);
         }
         else {
-            totalFrequenciesABox = callback(freqData);
-            console.log(totalFrequenciesABox);
+            var data = freqData.slice(26,47);
+            totalFrequenciesABox = callback(data);
+            // console.log(totalFrequenciesABox);
         }
     });
 }
@@ -27,7 +40,7 @@ function dataHandler(data){
 }
 
 function loadAcledDataAsia() {
-    acledFileName = "Asia";
+    dataFileName = "Asia";
     loadFreq(dataHandler);
     d3.json("data/Asia.json", function (error, inputData) {
         if (error) {
@@ -48,7 +61,7 @@ function loadAcledDataAsia() {
     });
 }
 function loadAcledDataME() {
-    acledFileName = "MiddleEast";
+    dataFileName = "MiddleEast";
     loadFreq(dataHandler);
     d3.json("data/MiddleEast.json", function (error, inputData) {
         if (error) {
@@ -68,7 +81,7 @@ function loadAcledDataME() {
     });
 }
 function loadAcledDataAfrica() {
-    acledFileName = "Africa";
+    dataFileName = "Africa";
     loadFreq(dataHandler);
     d3.json("data/Africa.json", function (error, inputData) {
         if (error) {
@@ -87,7 +100,7 @@ function loadAcledDataAfrica() {
     });
 }
 function loadAcledDataMEMonth() {
-    acledFileName = "MiddleEastMonth";
+    dataFileName = "MiddleEastMonth";
     loadFreq(dataHandler);
     d3.json("data/MiddleEastMonth.json", function (error, inputData) {
         if (error) {
@@ -98,9 +111,28 @@ function loadAcledDataMEMonth() {
             var temp = JSON.parse(JSON.stringify(inputData));
             var topData = getTop(temp, 50);        // same input, output specific
 
-
             data = tfidf(topData);
             console.log("Oh");
+            draw(data);
+            // timeArcs()
+        }
+    });
+}
+
+function loadGTD() {
+    dataFileName = "gtd";
+    loadFreq(dataHandler);
+    d3.json("data/GTD/gtd.json", function (error, inputData) {
+        if (error) {
+            console.log(error);
+        }
+        else {
+
+            // var temp = inputData.slice(26,47);
+            var temp = JSON.parse(JSON.stringify(inputData));
+            var topData = getTop(temp, 80);        // same input, output specific
+
+            data = tfidf(topData);
             draw(data);
             // timeArcs()
         }
